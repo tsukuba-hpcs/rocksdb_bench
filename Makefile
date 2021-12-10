@@ -1,5 +1,5 @@
 CFLAGS=-O -Wall -fopenmp
-LDFLAGS=-lpmemkv
+LDLIBS=`pkg-config --libs libpmemkv`
 
 SRCS=pmemkv_bench.c
 SCRIPTS=bench.sh parse.sh
