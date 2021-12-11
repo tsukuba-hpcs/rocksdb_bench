@@ -1,0 +1,17 @@
+set style data linespoints
+set logscale x
+set yrange [0:]
+set xrange [10:]
+set xlabel "Value size [Bytes]"
+set ylabel "Bandwidth [GiB/s]"
+set key left
+set output "remove-bw.eps"
+set term postscript eps "Times-Roman" 18
+plot 'remove-1-bw.dat' title '1 thread', \
+     'remove-2-bw.dat' title '2 threads', \
+     'remove-3-bw.dat' title '3 threads', \
+     'remove-4-bw.dat' title '4 threads', \
+     'remove-5-bw.dat' title '5 threads', \
+     'remove-6-bw.dat' title '6 threads', \
+     'remove-7-bw.dat' title '7 threads', \
+     'remove-8-bw.dat' title '8 threads'

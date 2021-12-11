@@ -1,0 +1,17 @@
+set style data linespoints
+set logscale x
+set yrange [0:]
+set xrange [10:]
+set xlabel "Value size [Bytes]"
+set ylabel "Bandwidth [GiB/s]"
+set key left
+set output "get-bw.eps"
+set term postscript eps "Times-Roman" 18
+plot 'get-1-bw.dat' title '1 thread', \
+     'get-2-bw.dat' title '2 threads', \
+     'get-3-bw.dat' title '3 threads', \
+     'get-4-bw.dat' title '4 threads', \
+     'get-5-bw.dat' title '5 threads', \
+     'get-6-bw.dat' title '6 threads', \
+     'get-7-bw.dat' title '7 threads', \
+     'get-8-bw.dat' title '8 threads'

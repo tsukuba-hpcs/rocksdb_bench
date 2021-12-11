@@ -1,0 +1,17 @@
+set style data linespoints
+set logscale x
+set yrange [0:]
+set xrange [10:]
+set xlabel "Value size [Bytes]"
+set ylabel "Bandwidth [GiB/s]"
+set key left
+set output "put-bw.eps"
+set term postscript eps "Times-Roman" 18 color
+plot 'put-1-bw.dat' title '1 thread', \
+     'put-2-bw.dat' title '2 threads', \
+     'put-3-bw.dat' title '3 threads', \
+     'put-4-bw.dat' title '4 threads', \
+     'put-5-bw.dat' title '5 threads', \
+     'put-6-bw.dat' title '6 threads', \
+     'put-7-bw.dat' title '7 threads', \
+     'put-8-bw.dat' title '8 threads'
