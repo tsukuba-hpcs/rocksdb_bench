@@ -3,7 +3,7 @@ set logscale x
 set yrange [0:]
 set xrange [10:]
 set xlabel "Value size [Bytes]"
-set ylabel "Bandwidth [GiB/s]"
+set ylabel "Bandwidth [MiB/s]"
 set key left
 set output "get-bw.eps"
 set term postscript eps "Times-Roman" 18
