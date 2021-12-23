@@ -6,7 +6,7 @@ set xlabel "Value size [Bytes]"
 set ylabel "Bandwidth [MiB/s]"
 set key left
 set output "remove-bw.eps"
-set term postscript eps "Times-Roman" 18
+set term postscript eps "Times-Roman" 18 color
 plot 'remove-1-bw.dat' title '1 thread', \
      'remove-2-bw.dat' title '2 threads', \
      'remove-3-bw.dat' title '3 threads', \

@@ -6,7 +6,7 @@ set xlabel "Value size [Bytes]"
 set ylabel "K Operations per second"
 set key right
 set output "put-iops.eps"
-set term postscript eps "Times-Roman" 18
+set term postscript eps "Times-Roman" 18 color
 plot 'put-1-iops.dat' title '1 thread', \
      'put-2-iops.dat' title '2 threads', \
      'put-3-iops.dat' title '3 threads', \

@@ -6,7 +6,7 @@ set xlabel "Value size [Bytes]"
 set ylabel "Bandwidth [MiB/s]"
 set key left
 set output "get-bw.eps"
-set term postscript eps "Times-Roman" 18
+set term postscript eps "Times-Roman" 18 color
 plot 'get-1-bw.dat' title '1 thread', \
      'get-2-bw.dat' title '2 threads', \
      'get-3-bw.dat' title '3 threads', \
