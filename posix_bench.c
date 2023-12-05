@@ -39,7 +39,7 @@ kv_put(void *key, size_t key_size, void *value, size_t value_size)
 int
 kv_get(void *key, size_t key_size, void *value, size_t *value_size)
 {
-	return fs_inode_write(key, key_size, value, value_size, 0, 0100644, 4096);
+	return fs_inode_read(key, key_size, value, value_size, 0);
 }
 
 int

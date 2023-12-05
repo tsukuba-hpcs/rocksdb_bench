@@ -1,9 +1,9 @@
 #!/bin/bash
 
-ls plot | \
+ls plot/*-bw | \
 	while read line
 	do
-		gnuplot -c "plot/$line"
+		gnuplot -c "$line"
 	done
 
 ls *.eps | \

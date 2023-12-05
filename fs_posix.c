@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/xattr.h>
@@ -235,7 +237,7 @@ fs_inode_create(char *key, size_t key_size, uint32_t uid, uint32_t gid,
 
 	log_debug("%s: %s mode %o chunk_size %ld", diag, p, mode, chunk_size);
 	if (S_ISREG(mode)) {
-		fd = r = fs_open(p, O_CREAT|O_WRONLY|O_TRUNC, mode,
+		fd = r = fs_open(p, O_CREAT|O_WRONLY|O_TRUNC|O_DIRECT|O_SYNC, mode,
 			&chunk_size);
 		if (fd >= 0) {
 			if (buf && size > 0) {
@@ -360,7 +362,7 @@ fs_inode_write(char *key, size_t key_size, const void *buf, size_t *size,
 		}
 		ss = chunk_size - offset;
 	}
-	fd = r = fs_open(p, O_WRONLY, mode, &chunk_size);
+	fd = r = fs_open(p, O_WRONLY | O_DIRECT | O_SYNC, mode, &chunk_size);
 	if (fd >= 0) {
 		r = pwrite(fd, buf, ss, offset + msize);
 		if (r == -1)
@@ -396,7 +398,7 @@ fs_inode_read(char *key, size_t key_size, void *buf, size_t *size,
 			*size = r;
 		goto done;
 	}
-	fd = r = fs_open(p, O_RDONLY, 0644, &chunk_size);
+	fd = r = fs_open(p, O_RDONLY | O_DIRECT | O_SYNC , 0644, &chunk_size);
 	if (r < 0)
 		goto done;
 	log_debug("%s: chunk_size %ld", diag, chunk_size);

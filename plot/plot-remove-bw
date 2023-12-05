@@ -9,9 +9,7 @@ set output "remove-bw.eps"
 set term postscript eps "Times-Roman" 18 color
 plot 'log/remove-1-bw.dat' title '1 thread', \
      'log/remove-2-bw.dat' title '2 threads', \
-     'log/remove-3-bw.dat' title '3 threads', \
      'log/remove-4-bw.dat' title '4 threads', \
-     'log/remove-5-bw.dat' title '5 threads', \
-     'log/remove-6-bw.dat' title '6 threads', \
-     'log/remove-7-bw.dat' title '7 threads', \
-     'log/remove-8-bw.dat' title '8 threads'
+     'log/remove-8-bw.dat' title '8 threads', \
+     'log/remove-16-bw.dat' title '16 threads', \
+     'log/remove-32-bw.dat' title '32 threads'

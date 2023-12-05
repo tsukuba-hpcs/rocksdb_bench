@@ -5,6 +5,7 @@ set -eu
 SDIR=/mnt/nvme0n1p1/bench
 BIN=./posix_bench
 rm -rf $SDIR
+rm -rf log/*
 mkdir -p $SDIR
 
 #SDIR=/dev/dax0.0
@@ -16,11 +17,11 @@ MAXSIZE=$((1 * 1000 * 1000 * 1000)) # 1GB
 #PMEMOBJ_CONF="prefault.at_open=1;prefault.at_create=1"
 #export PMEMOBJ_CONF
 
-vsize=1
+vsize=512
 while [ $vsize -le $((8*1024*1024)) ] # loop value size 1B to 8MB by 2x
 do
 	echo "vsize = $vsize B"
-	for TH in 1 2 3 4 5 6 7 8 # loop thread size 1 to 8
+	for TH in 1 2 4 8 16 32 # loop thread size 1 to 8
 	#for TH in 1 2 4 8
 	do
 		vmsize=$((vsize + 64))

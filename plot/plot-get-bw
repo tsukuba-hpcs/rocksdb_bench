@@ -9,9 +9,7 @@ set output "get-bw.eps"
 set term postscript eps "Times-Roman" 18 color
 plot 'log/get-1-bw.dat' title '1 thread', \
      'log/get-2-bw.dat' title '2 threads', \
-     'log/get-3-bw.dat' title '3 threads', \
      'log/get-4-bw.dat' title '4 threads', \
-     'log/get-5-bw.dat' title '5 threads', \
-     'log/get-6-bw.dat' title '6 threads', \
-     'log/get-7-bw.dat' title '7 threads', \
-     'log/get-8-bw.dat' title '8 threads'
+     'log/get-8-bw.dat' title '8 threads', \
+     'log/get-16-bw.dat' title '16 threads', \
+     'log/get-32-bw.dat' title '32 threads'

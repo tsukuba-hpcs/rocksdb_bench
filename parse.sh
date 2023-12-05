@@ -1,9 +1,11 @@
 #!/bin/bash
 
+rm -f log/*.dat
+
 i=1
 while [ $i -le $((8*1024*1024)) ]
 do
-	for p in 1 2 3 4 5 6 7 8
+	for p in 1 2 4 8 16 32
 	do
 		for l in put get remove
 		do
