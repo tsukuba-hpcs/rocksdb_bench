@@ -1,11 +1,11 @@
-CFLAGS=-O -Wall -fopenmp
-LDLIBS=`pkg-config --libs libpmemkv`
+CFLAGS=-g -O -Wall -fopenmp `pkg-config --cflags rocksdb`
+LDLIBS=`pkg-config --libs rocksdb`
 
-SRCS=pmemkv_bench.c
+SRCS=rocksdb_bench.c kv_err.c
 SCRIPTS=bench.sh parse.sh
 
-all: pmemkv_bench
+all: rocksdb_bench
 
 dist:
-	rm -f pmemkv_bench.tar.gz
-	tar zcf pmemkv_bench.tar.gz Makefile $(SRCS) $(SCRIPTS)
+	rm -f rocksdb_bench.tar.gz
+	tar zcf rocksdb_bench.tar.gz Makefile $(SRCS) $(SCRIPTS)

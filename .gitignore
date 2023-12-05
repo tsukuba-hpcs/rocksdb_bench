@@ -1,0 +1,5 @@
+out-*
+get-*
+put-*
+remove-*
+rocksdb_bench

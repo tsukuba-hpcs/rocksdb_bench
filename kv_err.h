@@ -1,0 +1,21 @@
+#define KV_ERROR \
+	X(KV_SUCCESS)		\
+	X(KV_ERR_EXIST)		\
+	X(KV_ERR_NO_ENTRY)	\
+	X(KV_ERR_SERVER_DOWN)	\
+	X(KV_ERR_LOOKUP)	\
+	X(KV_ERR_NO_MEMORY)	\
+	X(KV_ERR_NOT_SUPPORTED)	\
+	X(KV_ERR_TOO_LONG)	\
+	X(KV_ERR_BULK_CREATE)	\
+	X(KV_ERR_BULK_TRANSFER)	\
+	X(KV_ERR_OUT_OF_RANGE)	\
+	X(KV_ERR_METADATA_SIZE_MISMATCH) \
+	X(KV_ERR_NO_SPACE) \
+	X(KV_ERR_UNKNOWN)
+
+#define X(a) a,
+enum { KV_ERROR };
+#undef X
+
+char *kv_err_string(int);
