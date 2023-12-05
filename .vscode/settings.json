@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*.jsm": "javascript",
+        "kv_err.h": "c",
+        "c.h": "c",
+        "fs.h": "c",
+        "stat.h": "c"
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/work/tmaruyama/rocksdb_bench",
+            "binaryPath": "/work/tmaruyama/rocksdb_bench/rocksdb_bench",
+            "binaryArgs": []
+        }
+    ]
+}

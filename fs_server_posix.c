@@ -1,23 +1,22 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <margo.h>
-#include "config.h"
-#include "ring.h"
-#include "ring_types.h"
-#include "ring_rpc.h"
-#include "ring_list.h"
-#include "kv_types.h"
+//#include "config.h"
+//#include "ring.h"
+//#include "ring_types.h"
+//#include "ring_rpc.h"
+//#include "ring_list.h"
+//#include "kv_types.h"
 #include "kv_err.h"
-#include "kv.h"
+//#include "kv.h"
 #include "fs_types.h"
-#include "fs_rpc.h"
+//#include "fs_rpc.h"
 #include "fs.h"
 #include "log.h"
 
 static char *self;
 
-DECLARE_MARGO_RPC_HANDLER(inode_readdir)
+//DECLARE_MARGO_RPC_HANDLER(inode_readdir)
 
 void
 fs_server_init_more(margo_instance_id mid, char *db_dir, size_t db_size,

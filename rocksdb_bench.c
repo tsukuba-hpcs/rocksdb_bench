@@ -9,9 +9,8 @@
 #include "rocksdb/c.h"
 #include "kv_err.h"
 
-
 static rocksdb_t *db = NULL;
-static rocksdb_column_family_handle_t *cf = NULL;
+//static rocksdb_column_family_handle_t *cf = NULL;
 
 
 void
@@ -72,26 +71,16 @@ kv_init(char *db_dir, char *engine, char *path, size_t size)
 void
 kv_term()
 {
-	rocksdb_close(db);
 }
 
 int
 kv_put(void *key, size_t key_size, void *value, size_t value_size)
 {
-	//log_debug("local rocksdb put: key=%s ", (char *)key);
-	//for(int i=0; i<value_size; i++)
-		//log_debug("local rocksdb put: value[%d]=%02hhX ", i, ((uint8_t *)value)[i]);
 	char *err = NULL;
 
-
-	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
-	rocksdb_writeoptions_disable_WAL(writeoptions, 1);
-	rocksdb_put(db, writeoptions , key, key_size, value, value_size, &err);
-	//rocksdb_put_cf(db, writeoptions, cf, key, key_size, value, value_size, &err);
 	if(err==NULL){
 		return KV_SUCCESS;
 	} else {
-		//log_debug("local rocksdb put: error: %s", err);
 		printf("err: %s\n", err);
 		return KV_ERR_UNKNOWN;
 	}
@@ -100,15 +89,12 @@ kv_put(void *key, size_t key_size, void *value, size_t value_size)
 int
 kv_get(void *key, size_t key_size, void *value, size_t *value_size)
 {
-	//log_debug("local rocksdb get: key=%s", (char *)key);
 	char *err = NULL;
 	value = rocksdb_get(db, rocksdb_readoptions_create(), key, key_size, value_size, &err);
 	if (value == NULL) {
-		//log_debug("local rocksdb get: no entory");
 		return KV_ERR_NO_ENTRY;
 	}
 	if(err!=NULL){
-		//log_debug("local rocksdb get: error: %s", err);
 		return KV_ERR_UNKNOWN;
 	}
 	return KV_SUCCESS;
@@ -118,8 +104,7 @@ kv_get(void *key, size_t key_size, void *value, size_t *value_size)
 int
 kv_remove(void *key, size_t key_size)
 {
-	//log_debug("local rocksdb remove: key=%s", (char *)key);
-	char *hoge; //not use
+	char *hoge = ""; //not use
 	size_t fuga; //not use
 	char isexist = kv_get(key, key_size, hoge, &fuga);
 	if (isexist != KV_SUCCESS) {
@@ -128,9 +113,6 @@ kv_remove(void *key, size_t key_size)
 	}
 
 	char *err = NULL;
-	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
-	rocksdb_writeoptions_disable_WAL(writeoptions, 1);
-	rocksdb_delete(db, writeoptions , key, key_size, &err);
 	if(err==NULL){
 		return KV_SUCCESS;
 	} else {

@@ -7,11 +7,11 @@ set ylabel "K Operations per second"
 set key right
 set output "remove-iops.eps"
 set term postscript eps "Times-Roman" 18 color
-plot 'remove-1-iops.dat' title '1 thread', \
-     'remove-2-iops.dat' title '2 threads', \
-     'remove-3-iops.dat' title '3 threads', \
-     'remove-4-iops.dat' title '4 threads', \
-     'remove-5-iops.dat' title '5 threads', \
-     'remove-6-iops.dat' title '6 threads', \
-     'remove-7-iops.dat' title '7 threads', \
-     'remove-8-iops.dat' title '8 threads'
+plot 'log/remove-1-iops.dat' title '1 thread', \
+     'log/remove-2-iops.dat' title '2 threads', \
+     'log/remove-3-iops.dat' title '3 threads', \
+     'log/remove-4-iops.dat' title '4 threads', \
+     'log/remove-5-iops.dat' title '5 threads', \
+     'log/remove-6-iops.dat' title '6 threads', \
+     'log/remove-7-iops.dat' title '7 threads', \
+     'log/remove-8-iops.dat' title '8 threads'

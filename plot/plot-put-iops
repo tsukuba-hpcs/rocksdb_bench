@@ -7,11 +7,11 @@ set ylabel "K Operations per second"
 set key right
 set output "put-iops.eps"
 set term postscript eps "Times-Roman" 18 color
-plot 'put-1-iops.dat' title '1 thread', \
-     'put-2-iops.dat' title '2 threads', \
-     'put-3-iops.dat' title '3 threads', \
-     'put-4-iops.dat' title '4 threads', \
-     'put-5-iops.dat' title '5 threads', \
-     'put-6-iops.dat' title '6 threads', \
-     'put-7-iops.dat' title '7 threads', \
-     'put-8-iops.dat' title '8 threads'
+plot 'log/put-1-iops.dat' title '1 thread', \
+     'log/put-2-iops.dat' title '2 threads', \
+     'log/put-3-iops.dat' title '3 threads', \
+     'log/put-4-iops.dat' title '4 threads', \
+     'log/put-5-iops.dat' title '5 threads', \
+     'log/put-6-iops.dat' title '6 threads', \
+     'log/put-7-iops.dat' title '7 threads', \
+     'log/put-8-iops.dat' title '8 threads'

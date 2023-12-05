@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/xattr.h>
@@ -8,17 +6,16 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>
-#include <margo.h>
-#ifdef USE_ABT_IO
-#include <abt-io.h>
-#endif
+#include <string.h>
+#include <stdio.h>
+#include <stdint.h>
 
-#include "ring_types.h"
-#include "ring_list.h"
-#include "kv_types.h"
-#include "kv.h"
+//#include "ring_types.h"
+//#include "ring_list.h"
+//#include "kv_types.h"
+//#include "kv.h"
 #include "kv_err.h"
-#include "fs_types.h"
+//#include "fs_types.h"
 #include "fs.h"
 #include "file.h"
 #include "log.h"
@@ -31,35 +28,6 @@ struct metadata {
 static int msize = sizeof(struct metadata);
 #else
 static int msize = 0;
-#endif
-
-#ifdef USE_ABT_IO
-static abt_io_instance_id abtio;
-static __thread int __r;
-
-#define open(path, flags, mode) \
-	((__r = abt_io_open(abtio, path, flags, mode)) < 0 ? \
-	 (errno = -__r), -1 : __r)
-#define close(fd) abt_io_close(abtio, fd)
-#define write(fd, buf, count) \
-	((__r = abt_io_write(abtio, fd, buf, count)) < 0 ? \
-	 (errno = -__r), -1 : __r)
-#define read(fd, buf, count) \
-	((__r = abt_io_read(abtio, fd, buf, count)) < 0 ? \
-	 (errno = -__r), -1 : __r)
-#define pwrite(fd, buf, count, off) \
-	((__r = abt_io_pwrite(abtio, fd, buf, count, off)) < 0 ? \
-	 (errno = -__r), -1 : __r)
-#define pread(fd, buf, count, off) \
-	((__r = abt_io_pread(abtio, fd, buf, count, off)) < 0 ? \
-	 (errno = -__r), -1 : __r)
-#ifdef HAVE_ABT_IO_TRUNCATE
-#define truncate(path, len) \
-	((__r = abt_io_truncate(abtio, path, len)) < 0 ? \
-	 (errno = -__r), -1 : __r)
-#endif
-#define unlink(path) \
-	((__r = abt_io_unlink(abtio, path)) < 0 ? (errno = -__r), -1 : __r)
 #endif
 
 static int
@@ -97,11 +65,13 @@ fs_inode_init(char *dir, int niothreads)
 	if (r == -1)
 		log_fatal("%s: %s", dir, strerror(errno));
 
+/*
 #ifdef USE_ABT_IO
 	abtio = abt_io_init(niothreads);
 	if (abtio == ABT_IO_INSTANCE_NULL)
 		log_fatal("abt_io_init failed, abort");
 #endif
+*/
 	log_info("fs_inode_init: path %s", dir);
 }
 
@@ -302,6 +272,7 @@ fs_inode_create(char *key, size_t key_size, uint32_t uid, uint32_t gid,
 	return (fs_err(r, diag));
 }
 
+/*
 int
 fs_inode_create_stat(char *key, size_t key_size, struct fs_stat *st,
 	const void *buf, size_t size)
@@ -369,6 +340,7 @@ err:
 	log_debug("%s: %d", diag, r);
 	return (fs_err(r, diag));
 }
+*/
 
 int
 fs_inode_write(char *key, size_t key_size, const void *buf, size_t *size,
@@ -584,6 +556,7 @@ fs_inode_readdir(char *path, void (*cb)(struct dirent *, struct stat *, void *),
 	return (fs_err(r, diag));
 }
 
+/*
 int
 fs_inode_unlink_chunk_all(char *path, int i)
 {
@@ -606,3 +579,4 @@ fs_inode_unlink_chunk_all(char *path, int i)
 	}
 	return (0);
 }
+*/

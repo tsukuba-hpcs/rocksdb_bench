@@ -1,6 +1,11 @@
+#!/bin/bash
+
+set -eu
+
 SDIR=/mnt/nvme0n1p1/bench
+BIN=./posix_bench
+rm -rf $SDIR
 mkdir -p $SDIR
-rm -rf $SDIR/kv.db
 
 #SDIR=/dev/dax0.0
 #pmempool rm $SDIR
@@ -19,13 +24,13 @@ do
 	#for TH in 1 2 4 8
 	do
 		vmsize=$((vsize + 64))
-		OUTF="out-${vmsize}-${TH}"
+		OUTF="log/out-${vmsize}-${TH}"
 		
 		# bench 10 keys
 		N=10
 		echo -n "$N start"
 		[ $((N * vmsize)) -gt $MAXSIZE ] && N=$((MAXSIZE / vmsize)) # cast maxsize
-		./pmemkv_bench -v $vmsize -n $N -T $TH $SDIR > $OUTF.0
+		$BIN -v $vmsize -n $N -T $TH $SDIR > $OUTF.0
 		set $(grep put $OUTF.0)
 		TIME=$4
 		echo " $TIME sec"
@@ -36,7 +41,7 @@ do
 		echo -n "$N (about 10 sec)"
 		[ $((N * vmsize)) -gt $MAXSIZE ] && N=$((MAXSIZE / vmsize)) # cast maxsize
 		echo -n " $N"
-		./pmemkv_bench -v $vmsize -n $N -T $TH $SDIR > $OUTF.1
+		$BIN -v $vmsize -n $N -T $TH $SDIR > $OUTF.1
 		set $(grep put $OUTF.1)
 		TIME=$4
 		echo " $TIME sec"
@@ -47,7 +52,7 @@ do
 		#echo -n "$N (about 20 sec or 1GB)"
 		#[ $((N * vmsize)) -gt $MAXSIZE ] && N=$((MAXSIZE / vmsize)) # cast maxsize
 		#echo "$N"
-		#./pmemkv_bench -v $vmsize -n $N -T $TH $SDIR > $OUTF.2
+		#$BIN -v $vmsize -n $N -T $TH $SDIR > $OUTF.2
 	
 	done
 	vsize=$((vsize*32))

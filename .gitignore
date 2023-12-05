@@ -2,4 +2,6 @@ out-*
 get-*
 put-*
 remove-*
+oldlog/
 rocksdb_bench
+*.o

@@ -8,9 +8,9 @@ do
 		for l in put get remove
 		do
 			ii=$((i + 64))
-			[ ! -e "out-$ii-$p.1" ] && break
-			echo $ii $(grep $l out-$ii-$p.1 | awk '{ print $5 }') >> $l-$p-bw.dat
-			echo $ii $(grep $l out-$ii-$p.1 | awk '{ print $6 }') >> $l-$p-iops.dat
+			[ ! -e "log/out-$ii-$p.1" ] && break
+			echo $ii $(grep $l log/out-$ii-$p.1 | awk '{ print $5 }') >> log/$l-$p-bw.dat
+			echo $ii $(grep $l log/out-$ii-$p.1 | awk '{ print $6 }') >> log/$l-$p-iops.dat
 		done
 	done
 	i=$((i*2))
