@@ -3,7 +3,8 @@
 set -eu
 
 SDIR=/mnt/nvme0n1p1/bench
-BIN=./posix_bench
+#BIN=./posix_bench
+BIN=./rocksdb_bench
 rm -rf $SDIR
 rm -rf log/*
 mkdir -p $SDIR
@@ -18,13 +19,14 @@ MAXSIZE=$((1 * 1000 * 1000 * 1000)) # 1GB
 #export PMEMOBJ_CONF
 
 vsize=512
-while [ $vsize -le $((8*1024*1024)) ] # loop value size 1B to 8MB by 2x
+while [ $vsize -le $((500*1024*1024)) ] # loop value size 1B to 500MB by 2x
 do
 	echo "vsize = $vsize B"
 	for TH in 1 2 4 8 16 32 # loop thread size 1 to 8
 	#for TH in 1 2 4 8
 	do
-		vmsize=$((vsize + 64))
+		#vmsize=$((vsize + 64))
+		vmsize=$vsize
 		OUTF="log/out-${vmsize}-${TH}"
 		
 		# bench 10 keys
@@ -37,7 +39,7 @@ do
 		echo " $TIME sec"
 		
 		# calc keys for around sec
-		DURATION=10
+		DURATION=5
 		N=$(echo "scale=0; $DURATION * $N / $TIME" | bc -l)
 		echo -n "$N (about 10 sec)"
 		[ $((N * vmsize)) -gt $MAXSIZE ] && N=$((MAXSIZE / vmsize)) # cast maxsize
@@ -56,5 +58,5 @@ do
 		#$BIN -v $vmsize -n $N -T $TH $SDIR > $OUTF.2
 	
 	done
-	vsize=$((vsize*32))
+	vsize=$((vsize*8))
 done

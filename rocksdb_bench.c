@@ -86,7 +86,10 @@ kv_put(void *key, size_t key_size, void *value, size_t value_size)
 
 	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
 	rocksdb_writeoptions_disable_WAL(writeoptions, 1);
-	rocksdb_put(db, writeoptions , key, key_size, value, value_size, &err);
+
+	//fprintf(stderr, "put!!!!\n");
+	rocksdb_put(db, writeoptions, key, key_size, value, value_size, &err);
+	//fprintf(stderr, "put!!!! (end)\n");
 	//rocksdb_put_cf(db, writeoptions, cf, key, key_size, value, value_size, &err);
 	if(err==NULL){
 		return KV_SUCCESS;
@@ -119,7 +122,7 @@ int
 kv_remove(void *key, size_t key_size)
 {
 	//log_debug("local rocksdb remove: key=%s", (char *)key);
-	char *hoge; //not use
+	char *hoge = ""; //not use
 	size_t fuga; //not use
 	char isexist = kv_get(key, key_size, hoge, &fuga);
 	if (isexist != KV_SUCCESS) {

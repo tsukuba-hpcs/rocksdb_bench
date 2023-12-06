@@ -6,3 +6,4 @@ oldlog/
 rocksdb_bench
 posix_bench
 *.o
+tmp/

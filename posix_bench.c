@@ -9,8 +9,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <syslog.h>
 #include "kv_err.h"
 #include "fs.h"
+#include "log.h"
+
+int vsize = 4 * 1024;
 
 void
 kv_init(char *dir)
@@ -31,14 +35,19 @@ kv_term()
 int
 kv_put(void *key, size_t key_size, void *value, size_t value_size)
 {
-	return fs_inode_create(key, key_size,
-	   0, 0, 0100644, 4096,
-	   value, value_size);
+	int r = fs_inode_create(key, key_size,
+	   0, 0, 0100644, vsize,
+	   value, 0);
+	if (r != 0) return r;
+
+	return fs_inode_write(key, key_size,
+	   value, &value_size, 0, 0100644, vsize);
 }
 
 int
 kv_get(void *key, size_t key_size, void *value, size_t *value_size)
 {
+	//*value_size = 0;
 	return fs_inode_read(key, key_size, value, value_size, 0);
 }
 
@@ -53,7 +62,7 @@ usage(char *prog_name)
 {
 	fprintf(stderr, "Usage: %s [-T nthreads] [-v vsize] "
 			"[-n n_keys] db_dir\n", prog_name);
-	fprintf(stderr, "Output: <type> <vsize> <n_keys> <time> "
+	fprintf(stderr, "Output: <vsize> <n_keys> <time> "
 			"<throughput MB/s> <IOPS count/s>\n");
 	exit(EXIT_FAILURE);
 }
@@ -64,7 +73,9 @@ __thread char key[KEY_SIZE], *value;
 int
 main(int argc, char *argv[])
 {
-	int c, vsize = 4 * 1024, ret;
+	//log_set_priority_max_level(LOG_DEBUG);
+
+	int c, ret;
 	char *db_dir = NULL, nthreads = 1;
 	size_t i, n_keys = 100000;
 	size_t osize;
@@ -97,7 +108,18 @@ main(int argc, char *argv[])
 
 	omp_set_num_threads(nthreads);
 #pragma omp parallel
-	value = calloc(vsize, 1);
+	if(vsize <= 512) {
+		if(posix_memalign((void**)&value, 512, 512)){
+			fprintf(stderr, "memalign error \n");
+		};
+		//fprintf(stderr, "vsize = %d, memory = %p \n", 512, value);
+	}else{
+		if(posix_memalign((void**)&value, 512, vsize)){
+			fprintf(stderr, "memalign error \n");
+		};
+		//fprintf(stderr, "vsize = %d, memory = %p \n", vsize, value);
+	}
+	//value = calloc(vsize, 1);
 
 	gettimeofday(&tv[0], NULL);
 #pragma omp parallel for private(ret) schedule(static, 1)
@@ -119,10 +141,20 @@ main(int argc, char *argv[])
 			1.0 / 1024 / 1024 * total_vsize / t, .001 * n_keys / t);
 
 	gettimeofday(&tv[0], NULL);
+
+	sync();
+	int fd = open("/proc/sys/vm/drop_caches", O_WRONLY);
+	write(fd, "3", 1);
+	close(fd);
+
 #pragma omp parallel for private(ret) schedule(static, 1)
 	for (i = 0; i < n_keys; ++i) {
 		sprintf(key, "%0*ld", KEY_SIZE - 1, i);
 		ret = kv_get(key, KEY_SIZE, value, &osize);
+		sync();
+		int fd = open("/proc/sys/vm/drop_caches", O_WRONLY);
+		write(fd, "3", 1);
+		close(fd);
 		if (ret != KV_SUCCESS)
 			fprintf(stderr, "get failed %ld \n", i);
 	}
@@ -139,8 +171,8 @@ main(int argc, char *argv[])
 	for (i = 0; i < n_keys; ++i) {
 		sprintf(key, "%0*ld", KEY_SIZE - 1, i);
 		ret = kv_remove(key, KEY_SIZE);
-		if (ret != KV_SUCCESS)
-			fprintf(stderr, "%ld \n", i);
+		//if (ret != KV_SUCCESS)
+		//	fprintf(stderr, "%ld \n", i);
 	}
 	gettimeofday(&tv[1], NULL);
 

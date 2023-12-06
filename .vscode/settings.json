@@ -12,5 +12,6 @@
             "binaryPath": "/work/tmaruyama/rocksdb_bench/rocksdb_bench",
             "binaryArgs": []
         }
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }

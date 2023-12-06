@@ -28,6 +28,7 @@ struct metadata {
 };
 
 static int msize = sizeof(struct metadata);
+//static int msize = 512;
 #else
 static int msize = 0;
 #endif
@@ -136,7 +137,7 @@ set_chunk_size(const char *path, size_t size)
 		log_error("%s: %s: %s", diag, path, strerror(errno));
 	}
 #else
-	fd = open(path, O_WRONLY, 0);
+	fd = open(path, O_WRONLY | O_SYNC, 0);
 	if (fd == -1) {
 		r = -errno;
 		log_error("%s: %s: %s", diag, path, strerror(errno));
@@ -174,7 +175,7 @@ get_chunk_size(const char *path, size_t *size)
 		log_info("%s: %s: %s", diag, path, strerror(errno));
 	}
 #else
-	fd = open(path, O_RDONLY, 0);
+	fd = open(path, O_RDONLY | O_SYNC, 0);
 	if (fd == -1) {
 		r = -errno;
 		log_info("%s: %s: %s", diag, path, strerror(errno));
@@ -235,10 +236,15 @@ fs_inode_create(char *key, size_t key_size, uint32_t uid, uint32_t gid,
 	int r, fd;
 	static const char diag[] = "fs_inode_create";
 
-	log_debug("%s: %s mode %o chunk_size %ld", diag, p, mode, chunk_size);
+	log_debug("%s: %s mode %o chunk_size %ld size %d", diag, p, mode, chunk_size, (int)size);
 	if (S_ISREG(mode)) {
-		fd = r = fs_open(p, O_CREAT|O_WRONLY|O_TRUNC|O_DIRECT, mode,
-			&chunk_size);
+		if (size == 0){
+			fd = r = fs_open(p, O_CREAT|O_WRONLY|O_TRUNC|O_SYNC|O_DIRECT, mode,
+				&chunk_size);
+		}else{
+			fd = r = fs_open(p, O_CREAT|O_WRONLY|O_TRUNC|O_SYNC, mode,
+				&chunk_size);
+		}
 		if (fd >= 0) {
 			if (buf && size > 0) {
 				if (size > chunk_size)
@@ -362,7 +368,7 @@ fs_inode_write(char *key, size_t key_size, const void *buf, size_t *size,
 		}
 		ss = chunk_size - offset;
 	}
-	fd = r = fs_open(p, O_WRONLY | O_DIRECT, mode, &chunk_size);
+	fd = r = fs_open(p, O_WRONLY | O_SYNC, mode, &chunk_size);
 	if (fd >= 0) {
 		r = pwrite(fd, buf, ss, offset + msize);
 		if (r == -1)
@@ -398,9 +404,11 @@ fs_inode_read(char *key, size_t key_size, void *buf, size_t *size,
 			*size = r;
 		goto done;
 	}
-	fd = r = fs_open(p, O_RDONLY | O_DIRECT, 0644, &chunk_size);
-	if (r < 0)
+	fd = r = fs_open(p, O_RDONLY | O_SYNC | O_DIRECT, 0644, &chunk_size);
+	if (r < 0){
+		log_debug("%s: fs_open failed", diag);
 		goto done;
+	}
 	log_debug("%s: chunk_size %ld", diag, chunk_size);
 
 	ss = *size;
@@ -413,7 +421,9 @@ fs_inode_read(char *key, size_t key_size, void *buf, size_t *size,
 	if (ss == 0)
 		r = 0;
 	else {
-		r = pread(fd, buf, ss, offset + msize);
+		log_debug("%s: pread fd=%d buf=%p, ss=%d offsetmsize=%d", diag, fd, buf, (int)ss, (int)(offset + msize));
+		//r = pread(fd, buf, ss, offset + msize);
+		r = pread(fd, buf, ss, 0);
 		if (r == -1)
 			r = -errno;
 	}
