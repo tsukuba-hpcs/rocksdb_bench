@@ -7,3 +7,4 @@ rocksdb_bench
 posix_bench
 *.o
 tmp/
+.spack-env/
